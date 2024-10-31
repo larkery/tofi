@@ -1005,6 +1005,7 @@ static bool do_submit(struct tofi *tofi)
 	struct entry *entry = &tofi->window.entry;
 	uint32_t selection = entry->selection + entry->first_result;
 	char *res = entry->results.buf[selection].string;
+        char *out = entry->results.buf[selection].output;
 
 	if (tofi->window.entry.results.count == 0) {
 		/* Always require a match in drun mode. */
@@ -1048,7 +1049,7 @@ static bool do_submit(struct tofi *tofi)
 				}
 			}
 		} else {
-			printf("%s\n", res);
+			printf("%s\n", out);
 		}
 	}
 	if (tofi->use_history) {
@@ -1487,7 +1488,7 @@ int main(int argc, char *argv[])
 		}
 		struct string_ref_vec commands = string_ref_vec_create();
 		for (size_t i = 0; i < apps.count; i++) {
-			string_ref_vec_add(&commands, apps.buf[i].name);
+			string_ref_vec_add(&commands, apps.buf[i].name, apps.buf[i].name);
 		}
 		tofi.window.entry.commands = commands;
 		tofi.window.entry.apps = apps;

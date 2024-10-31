@@ -38,6 +38,7 @@ struct scored_string *string_vec_find_sorted(struct string_vec *restrict vec, co
  * create a new struct to make the compiler complain if we mix them up.
  */
 struct scored_string_ref {
+  	char *output;
 	char *string;
 	int32_t search_score;
 	int32_t history_score;
@@ -62,7 +63,7 @@ void string_ref_vec_destroy(struct string_ref_vec *restrict vec);
 [[nodiscard("memory leaked")]]
 struct string_ref_vec string_ref_vec_copy(const struct string_ref_vec *restrict vec);
 
-void string_ref_vec_add(struct string_ref_vec *restrict vec, char *restrict str);
+void string_ref_vec_add(struct string_ref_vec *restrict vec, char *restrict str, char *restrict out);
 
 void string_ref_vec_history_sort(struct string_ref_vec *restrict vec, struct history *history);
 

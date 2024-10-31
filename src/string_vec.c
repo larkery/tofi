@@ -88,6 +88,7 @@ struct string_ref_vec string_ref_vec_copy(const struct string_ref_vec *restrict 
 	};
 
 	for (size_t i = 0; i < vec->count; i++) {
+                copy.buf[i].output = vec->buf[i].output;
 		copy.buf[i].string = vec->buf[i].string;
 		copy.buf[i].search_score = vec->buf[i].search_score;
 		copy.buf[i].history_score = vec->buf[i].history_score;
@@ -114,13 +115,15 @@ void string_vec_add(struct string_vec *restrict vec, const char *restrict str)
 	vec->count++;
 }
 
-void string_ref_vec_add(struct string_ref_vec *restrict vec, char *restrict str)
+void string_ref_vec_add(struct string_ref_vec *restrict vec, char *restrict str, char * out)
 {
 	if (vec->count == vec->size) {
 		vec->size *= 2;
 		vec->buf = xrealloc(vec->buf, vec->size * sizeof(vec->buf[0]));
 	}
-	vec->buf[vec->count].string = str;
+
+        vec->buf[vec->count].output = out;
+        vec->buf[vec->count].string = str;
 	vec->buf[vec->count].search_score = 0;
 	vec->buf[vec->count].history_score = 0;
 	vec->count++;
@@ -191,7 +194,8 @@ struct string_ref_vec string_ref_vec_filter(
 		int32_t search_score;
 		search_score = match_words(algorithm, substr, vec->buf[i].string);
 		if (search_score != INT32_MIN) {
-			string_ref_vec_add(&filt, vec->buf[i].string);
+                        string_ref_vec_add(&filt, vec->buf[i].string,
+                                           vec->buf[i].output);
 			filt.buf[filt.count - 1].search_score = search_score;
 			filt.buf[filt.count - 1].history_score = vec->buf[i].history_score;
 		}
@@ -208,7 +212,14 @@ struct string_ref_vec string_ref_vec_from_buffer(char *buffer)
 	char *saveptr = NULL;
 	char *line = strtok_r(buffer, "\n", &saveptr);
 	while (line != NULL) {
-		string_ref_vec_add(&vec, line);
+                char *output = strchr(line, '\x1f');
+                if (output) {
+                  *output = '\0';
+                  string_ref_vec_add(&vec, output+1, line);
+                } else {
+                  string_ref_vec_add(&vec, line, line);
+                }
+
 		line = strtok_r(NULL, "\n", &saveptr);
 	}
 	return vec;

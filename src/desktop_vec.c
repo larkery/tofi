@@ -157,7 +157,7 @@ struct string_ref_vec desktop_vec_filter(
 		int32_t search_score;
 		search_score = match_words(algorithm, substr, vec->buf[i].name);
 		if (search_score != INT32_MIN) {
-			string_ref_vec_add(&filt, vec->buf[i].name);
+			string_ref_vec_add(&filt, vec->buf[i].name, vec->buf[i].name);
 			/* Store the score of the match for later sorting. */
 			filt.buf[filt.count - 1].search_score = search_score;
 			filt.buf[filt.count - 1].history_score = vec->buf[i].history_score;
@@ -165,7 +165,7 @@ struct string_ref_vec desktop_vec_filter(
 			/* If we didn't match the name, check the keywords. */
 			search_score = match_words(algorithm, substr, vec->buf[i].keywords);
 			if (search_score != INT32_MIN) {
-				string_ref_vec_add(&filt, vec->buf[i].name);
+				string_ref_vec_add(&filt, vec->buf[i].name, vec->buf[i].name);
 				/*
 				 * Arbitrary score addition to make name
 				 * matches preferred over keyword matches.
