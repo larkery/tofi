@@ -54,6 +54,7 @@ struct tofi {
 
 	/* State */
 	bool submit;
+        bool submit_raw;
 	bool closed;
 	int32_t output_width;
 	int32_t output_height;

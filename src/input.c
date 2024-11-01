@@ -96,6 +96,7 @@ void input_handle_keypress(struct tofi *tofi, xkb_keycode_t keycode)
 		return;
 	} else if (key == KEY_ENTER || key == KEY_KPENTER) {
 		tofi->submit = true;
+                tofi->submit_raw = shift;
 		return;
 	}
 

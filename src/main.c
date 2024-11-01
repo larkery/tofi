@@ -1007,7 +1007,7 @@ static bool do_submit(struct tofi *tofi)
 	char *res = entry->results.buf[selection].string;
         char *out = entry->results.buf[selection].output;
 
-	if (tofi->window.entry.results.count == 0) {
+	if (tofi->submit_raw || (tofi->window.entry.results.count == 0)) {
 		/* Always require a match in drun mode. */
 		if (tofi->require_match || entry->mode == TOFI_MODE_DRUN) {
 			return false;
