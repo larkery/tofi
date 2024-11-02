@@ -201,7 +201,7 @@ struct string_ref_vec string_ref_vec_filter(
 		}
 	}
 	/* Sort the results by their search score. */
-	qsort(filt.buf, filt.count, sizeof(filt.buf[0]), cmpscorep);
+	//qsort(filt.buf, filt.count, sizeof(filt.buf[0]), cmpscorep);
 	return filt;
 }
 
