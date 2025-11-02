@@ -62,7 +62,8 @@ void input_handle_keypress(struct tofi *tofi, xkb_keycode_t keycode)
 		add_character(tofi, keycode);
 	} else if ((key == KEY_BACKSPACE || key == KEY_W) && ctrl) {
 		delete_word(tofi);
-	} else if (key == KEY_BACKSPACE) {
+	} else if (key == KEY_BACKSPACE
+			|| (key == KEY_H && ctrl)) {
 		delete_character(tofi);
 	} else if (key == KEY_U && ctrl) {
 		clear_input(tofi);
@@ -76,13 +77,13 @@ void input_handle_keypress(struct tofi *tofi, xkb_keycode_t keycode)
 			|| key == KEY_LEFT
 			|| (key == KEY_TAB && shift)
 			|| (key == KEY_H && alt)
-			|| ((key == KEY_K || key == KEY_P) && (ctrl || alt))) {
+			|| ((key == KEY_K || key == KEY_P || key == KEY_B) && (ctrl || alt))) {
 		select_previous_result(tofi);
 	} else if (key == KEY_DOWN
 			|| key == KEY_RIGHT
 			|| key == KEY_TAB
 			|| (key == KEY_L && alt)
-			|| ((key == KEY_J || key == KEY_N) && (ctrl || alt))) {
+			|| ((key == KEY_J || key == KEY_N || key == KEY_F) && (ctrl || alt))) {
 		select_next_result(tofi);
 	} else if (key == KEY_HOME) {
 		reset_selection(tofi);
@@ -91,10 +92,12 @@ void input_handle_keypress(struct tofi *tofi, xkb_keycode_t keycode)
 	} else if (key == KEY_PAGEDOWN) {
 		select_next_page(tofi);
 	} else if (key == KEY_ESC
-			|| ((key == KEY_C || key == KEY_LEFTBRACE) && ctrl)) {
+			|| ((key == KEY_C || key == KEY_LEFTBRACE || key == KEY_G) && ctrl)) {
 		tofi->closed = true;
 		return;
-	} else if (key == KEY_ENTER || key == KEY_KPENTER) {
+	} else if (key == KEY_ENTER
+			|| key == KEY_KPENTER
+			|| (key == KEY_M && ctrl)) {
 		tofi->submit = true;
                 tofi->submit_raw = shift;
 		return;
@@ -158,6 +161,8 @@ static uint32_t keysym_to_key(xkb_keysym_t sym)
 			return KEY_ENTER;
 		case XKB_KEY_KP_Enter:
 			return KEY_KPENTER;
+		case XKB_KEY_m:
+			return KEY_M;
 	}
 	return (uint32_t)-1;
 }
